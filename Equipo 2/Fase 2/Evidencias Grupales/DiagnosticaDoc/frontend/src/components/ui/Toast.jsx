@@ -1,0 +1,2 @@
+import { useEffect, useState } from 'react'
+export function Toast({ message, onClose, ms=3500 }){ const [open,setOpen]=useState(Boolean(message)); useEffect(()=>{ if(!message) return; setOpen(true); const t=setTimeout(()=>{ setOpen(false); onClose?.() }, ms); return ()=>clearTimeout(t) },[message]); if(!open) return null; return (<div className='fixed bottom-4 right-4 bg-black/80 text-white px-4 py-2 rounded-xl shadow-lg text-sm'>{message}</div>) }

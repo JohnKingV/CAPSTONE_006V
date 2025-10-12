@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input{ @apply w-full border rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-sky-400/60 bg-white; }
+.btn-primary{ @apply px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700 active:scale-[.99]; }
+.btn-secondary{ @apply px-4 py-2 rounded-xl bg-sky-100 text-sky-900 hover:bg-sky-200; }
+.btn-danger{ @apply px-3 py-1.5 rounded-xl bg-red-600 text-white hover:bg-red-700; }
+.btn-ghost{ @apply px-3 py-1.5 rounded-xl hover:bg-sky-100; }
+.card{ @apply bg-white rounded-2xl shadow-sm border p-4; }
