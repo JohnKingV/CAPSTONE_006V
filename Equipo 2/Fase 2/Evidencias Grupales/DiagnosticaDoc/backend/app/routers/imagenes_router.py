@@ -6,12 +6,12 @@ from sqlalchemy.exc import IntegrityError
 from app.deps import get_db
 from app import models, schemas
 
-router = APIRouter(prefix="/imagenes", tags=["ImÃ¡genes"])
+router = APIRouter(prefix="/imagenes", tags=["Imagenes"])
 
 def _get_estudio_or_400(db: Session, estudio_id: int) -> models.Estudio:
     est = db.get(models.Estudio, estudio_id)
     if not est:
-        raise HTTPException(status_code=400, detail="estudio_id invÃ¡lido: no existe el estudio")
+        raise HTTPException(status_code=400, detail="estudio_id invalido: no existe el estudio")
     return est
 
 @router.post("", response_model=schemas.ImagenOut, status_code=status.HTTP_201_CREATED, summary="Crear Imagen")
@@ -29,7 +29,7 @@ def crear_imagen(payload: schemas.ImagenCreate, db: Session = Depends(get_db)):
     db.refresh(img)
     return img
 
-@router.get("", response_model=List[schemas.ImagenOut], summary="Listar ImÃ¡genes")
+@router.get("", response_model=List[schemas.ImagenOut], summary="Listar Imagenes")
 def listar_imagenes(
     db: Session = Depends(get_db),
     estudio_id: Optional[int] = Query(None),
