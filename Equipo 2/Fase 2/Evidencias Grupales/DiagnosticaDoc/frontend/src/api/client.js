@@ -3,7 +3,7 @@ import axios from 'axios'
 
 // 🔹 Normaliza la base (sin barra final) y con fallback local
 export const API_BASE =
-  (import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || 'http://127.0.0.1:8080')
+  (import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || 'http://127.0.0.1:8000')
 
 // 🔹 Instancia Axios con defaults seguros
 export const api = axios.create({
