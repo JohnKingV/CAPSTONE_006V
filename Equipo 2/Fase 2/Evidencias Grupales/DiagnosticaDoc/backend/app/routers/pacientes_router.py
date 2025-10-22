@@ -1,9 +1,9 @@
-from typing import List
+﻿from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
-from app.database import get_db
+from app.deps import get_db
 from app import models, schemas
 
 router = APIRouter(prefix="/pacientes", tags=["Pacientes"])
@@ -24,7 +24,7 @@ def crear_paciente(payload: schemas.PacienteCreate, db: Session = Depends(get_db
         db.commit()
     except IntegrityError as e:
         db.rollback()
-        # documento/email únicos (según tu modelo)
+        # documento/email Ãºnicos (segÃºn tu modelo)
         raise HTTPException(status_code=409, detail="Conflicto de datos (documento/email duplicado o NOT NULL)") from e
     db.refresh(pac)
     return pac

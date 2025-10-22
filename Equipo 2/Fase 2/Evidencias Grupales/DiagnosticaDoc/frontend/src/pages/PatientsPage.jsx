@@ -23,10 +23,10 @@ export default function PatientsPage(){
   }
   async function handleDelete(row){ if(!confirm(`Eliminar paciente ${row.nombres} ${row.apellidos}?`)) return
     try{ await deletePaciente(row.id); setRows(rs => rs.filter(r => r.id!==row.id)); setError('Paciente eliminado') } catch(e){ setError(parseApiError(e)) } }
-  return (<div className='p-6 space-y-4'>
-    <header className='flex items-center justify-between'><h1 className='text-2xl font-semibold text-sky-900'>Pacientes</h1>
+  return (<div className='section'>
+    <header className='flex items-center justify-between'><h1 className='title-page'>Pacientes</h1>
       <button className='btn-primary' onClick={()=>{ setEditing(null); setModal(true) }}>Nuevo</button></header>
-    <div className='card'>{loading ? <Spinner/> : <PatientsTable rows={rows} onEdit={(r)=>{ setEditing(r); setModal(true) }} onDelete={handleDelete}/>}</div>
+    <div className='card card-muted'>{loading ? <Spinner/> : <PatientsTable rows={rows} onEdit={(r)=>{ setEditing(r); setModal(true) }} onDelete={handleDelete}/>}</div>
     {modal && (<div className='fixed inset-0 bg-black/40 flex items-center justify-center p-4' onClick={()=>setModal(false)}>
       <div className='bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl' onClick={e=>e.stopPropagation()}>
         <h2 className='text-xl font-medium text-sky-900 mb-4'>{editing? 'Editar Paciente' : 'Nuevo Paciente'}</h2>

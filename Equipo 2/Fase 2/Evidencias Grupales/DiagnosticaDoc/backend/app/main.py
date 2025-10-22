@@ -1,3 +1,7 @@
+from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent / ".env")
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,7 +16,6 @@ from app.routers.medicos_router import router as medicos_router
 from app.routers.estudios_router import router as estudios_router
 from app.routers.imagenes_router import router as imagenes_router
 from app.routers.informes_router import router as informes_router
-
 
 app = FastAPI(title="DiagnosticaDoc API", version="1.0.0")
 
