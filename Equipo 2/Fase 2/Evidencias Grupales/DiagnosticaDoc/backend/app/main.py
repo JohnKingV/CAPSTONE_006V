@@ -17,6 +17,7 @@ from app.routers.estudios_router import router as estudios_router
 from app.routers.imagenes_router import router as imagenes_router
 from app.routers.informes_router import router as informes_router
 from app.routers.auth_router import router as auth_router
+from app.routers import ml_router
 
 
 
@@ -47,6 +48,8 @@ app.include_router(medicos_router)
 app.include_router(estudios_router)
 app.include_router(imagenes_router)
 app.include_router(informes_router)
+app.include_router(ml_router.router)
+
 
 # === Tablas ===
 Base.metadata.create_all(bind=engine)

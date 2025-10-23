@@ -1,2 +1,27 @@
-import { useEffect, useState } from 'react'
-export function Toast({ message, onClose, ms=3500 }){ const [open,setOpen]=useState(Boolean(message)); useEffect(()=>{ if(!message) return; setOpen(true); const t=setTimeout(()=>{ setOpen(false); onClose?.() }, ms); return ()=>clearTimeout(t) },[message]); if(!open) return null; return (<div className='fixed bottom-4 right-4 bg-black/80 text-white px-4 py-2 rounded-xl shadow-lg text-sm'>{message}</div>) }
+// ✅ compatible: export default y export nombrado
+import { useEffect } from "react";
+
+function Toast({ type = "info", children, onClose }) {
+  useEffect(() => {
+    const t = setTimeout(() => onClose?.(), 3500);
+    return () => clearTimeout(t);
+  }, [onClose]);
+
+  const base =
+    "fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg text-white z-[1000]";
+  const color =
+    type === "error"
+      ? "bg-red-600"
+      : type === "success"
+      ? "bg-emerald-600"
+      : "bg-slate-700";
+
+  return (
+    <div className={`${base} ${color}`}>
+      <div className="text-sm">{children}</div>
+    </div>
+  );
+}
+
+export default Toast;
+export { Toast };   // ← named export para imports { Toast }

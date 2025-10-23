@@ -7,3 +7,4 @@ export const getEstudio = async(id)=> fromApi((await api.get(`/estudios/${id}`))
 export const createEstudio = async(p)=> fromApi((await api.post('/estudios', toApiCreate(p))).data)
 export const updateEstudio = async(id,p)=> fromApi((await api.patch(`/estudios/${id}`, toApiUpdate(p))).data)
 export const deleteEstudio = async(id)=> { await api.delete(`/estudios/${id}`); return true }
+export { listEstudios as getEstudios };

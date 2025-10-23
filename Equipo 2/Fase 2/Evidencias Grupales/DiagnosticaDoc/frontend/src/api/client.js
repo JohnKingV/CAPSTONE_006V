@@ -7,19 +7,21 @@ import {
   normalizeBase,
 } from '../lib/storage'
 
-// 🔹 Base preferida: .env primero, y si no hay, usa lo guardado
-const ENV_BASE = (import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || 'http://127.0.0.1:8000')
-const SAVED_BASE = getEndpoint()
-export const API_BASE = ENV_BASE || SAVED_BASE || 'http://127.0.0.1:8000'
+// ✅ Base inicial: prioridad a lo guardado por el usuario; si no, .env; si no, localhost
+const ENV_BASE = (import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || '')
+const SAVED_BASE = getEndpoint() || ''
+const INITIAL_BASE = normalizeBase(SAVED_BASE || ENV_BASE || 'http://127.0.0.1:8000')
 
-// 🔹 Instancia Axios
+// ✅ Instancia Axios
 export const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: INITIAL_BASE,
   headers: {
     Accept: 'application/json',
-    'Content-Type': 'application/json',
+    // ⛔️ NO fijar 'Content-Type' globalmente; así axios puede poner el boundary
+    // 'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  // /predict puede tardar: subimos el timeout
+  timeout: 90000,
 })
 
 // === Request: agrega Authorization si hay token ===
@@ -53,7 +55,7 @@ export function parseApiError(err) {
   if (err.response) {
     const { status, data } = err.response
     if (status === 422 && Array.isArray(data?.detail)) {
-      const parts = data.detail.map(d => `${d.loc?.join('.')}: ${d.msg}`)
+      const parts = data.detail.map(d => `${(d.loc || []).join('.')}: ${d.msg}`)
       return `Validación: ${parts.join(' | ')}`
     }
     if (typeof data === 'string') return `${status}: ${data}`
@@ -86,7 +88,9 @@ export async function apiDelete(path, config) {
 }
 
 // ==== Overrides de baseURL (runtime) ====
-function _initialBase() { return ENV_BASE || getEndpoint() || 'http://127.0.0.1:8000' }
+function _initialBase() {
+  return INITIAL_BASE
+}
 
 export function getApiBase() {
   try { return api?.defaults?.baseURL || _initialBase() }
@@ -96,17 +100,20 @@ export function getApiBase() {
 export function setApiBase(url) {
   const clean = normalizeBase(url)
   if (clean) _setStore(clean); else _clearStore()
-  if (api?.defaults) api.defaults.baseURL = clean || ENV_BASE
+  if (api?.defaults) api.defaults.baseURL = clean || normalizeBase(ENV_BASE) || 'http://127.0.0.1:8000'
   return getApiBase()
 }
 
 export function clearApiBase() {
   _clearStore()
-  if (api?.defaults) api.defaults.baseURL = ENV_BASE
+  if (api?.defaults) api.defaults.baseURL = normalizeBase(ENV_BASE) || 'http://127.0.0.1:8000'
   return getApiBase()
 }
 
 // 🔧 Helpers de debugging en ventana (opcional)
 if (typeof window !== 'undefined') {
-  window.__api = { getApiBase, setApiBase, clearApiBase, ENV_BASE }
+  window.__api = { getApiBase, setApiBase, clearApiBase, ENV_BASE: normalizeBase(ENV_BASE), CURRENT: () => api.defaults.baseURL }
 }
+
+// También exporto por defecto para imports existentes
+export default api
