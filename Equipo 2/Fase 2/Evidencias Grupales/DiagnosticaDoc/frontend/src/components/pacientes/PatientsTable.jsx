@@ -1,7 +1,7 @@
 export default function PatientsTable({ rows=[], onEdit, onDelete }){
-  return (<div className='overflow-x-auto'><table className='min-w-full border rounded-xl overflow-hidden'>
+  return (<div className='overflow-x-auto'><table className='table'>
     <thead className='bg-sky-50'><tr className='text-left text-sky-900'>{['Nombre','Documento','Teléfono','Email','Nacimiento',''].map(h=>(<th key={h} className='px-3 py-2 border-b'>{h}</th>))}</tr></thead>
-    <tbody>{rows.map(r=>(<tr key={r.id} className='odd:bg-white even:bg-sky-50/30'>
+    <tbody>{rows.map(r=>(<tr key={r.id} className='odd:bg-white even:bg-sky-50/30 hover:bg-sky-50'>
       <td className='px-3 py-2 border-b'>{r.nombres} {r.apellidos}</td>
       <td className='px-3 py-2 border-b'>{r.documento}</td>
       <td className='px-3 py-2 border-b'>{r.telefono}</td>

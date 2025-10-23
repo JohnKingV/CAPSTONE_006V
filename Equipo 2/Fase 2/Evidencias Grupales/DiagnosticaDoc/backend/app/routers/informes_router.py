@@ -1,9 +1,9 @@
-from typing import List
+﻿from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
-from app.database import get_db
+from app.deps import get_db
 from app import models, schemas
 
 router = APIRouter(prefix="/informes", tags=["Informes"])

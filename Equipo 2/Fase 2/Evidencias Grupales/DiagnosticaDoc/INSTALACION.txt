@@ -1,0 +1,42 @@
+INSTALACION DEL BACKEND
+
+EN LA RUTA DE LA CARPETA EJEMPLO : 
+cd "C:\Users\jaran\OneDrive\Documentos\Proyectos\DiagnosticaDocUp\backend"
+
+
+ 1) Verifica tu versión de Python
+python --version
+# o
+py --version
+
+# 2) Crear el entorno (carpeta .venv)
+py -3 -m venv .venv
+# (si usas una versión específica)
+# py -3.11 -m venv .venv
+
+# 3) Activar
+.\.venv\Scripts\Activate.ps1     # PowerShell
+
+# 4) Actualizar pip y instalar deps
+python -m pip install --upgrade pip
+pip install -r requirements.txt  
+
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+INSTALACION DEL FRONTEND
+
+EN LA RUTA DE LA CARPETA EJEMPLO:
+
+cd "C:\Users\jaran\OneDrive\Documentos\Proyectos\DiagnosticaDocUp\frontend"
+
+
+# 1) Instalar deps
+npm install
+
+
+# 2) Correr en desarrollo
+npm run dev
+
+
+# 3) Build de producción #
+npm run build

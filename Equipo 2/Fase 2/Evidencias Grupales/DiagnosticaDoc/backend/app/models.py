@@ -9,13 +9,17 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
+    Boolean,
+    func,
     Date,
     ForeignKey,
     Text,
     UniqueConstraint,
     Index,
 )
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import relationship
+from enum import Enum as PyEnum  # <-- Enum de Python
 
 # Base y engine vienen desde tu módulo de DB
 # (debe exponer: engine, Base = declarative_base(), SessionLocal)
@@ -25,6 +29,24 @@ from app.database import Base
 # =========================
 #       MODELOS
 # =========================
+
+class UserRole(str, PyEnum):
+    admin = "admin"
+    medico = "medico"
+    paciente = "paciente"
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    full_name = Column(String, nullable=True)
+    password_hash = Column(String, nullable=False)
+    role = Column(SAEnum(UserRole, native_enum=False), nullable=False, default=UserRole.paciente)
+    is_active = Column(Boolean, nullable=False, default=True)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
+
 
 class Paciente(Base):
     __tablename__ = "pacientes"
@@ -189,7 +211,6 @@ class Informe(Base):
         return f"<Informe id={self.id} estudio_id={self.estudio_id}>"
 
 
-
 # =========================
 #   UTILIDAD (opcional)
 # =========================
@@ -203,9 +224,7 @@ def seed_estados_informe(session) -> None:
         ("en_revision", "En Revisión", "Informe pendiente de revisión."),
         ("final", "Final", "Informe finalizado y validado."),
     ]
-    existentes = {
-        e.codigo for e in session.query(EstadoInforme).all()
-    }
+    existentes = {e.codigo for e in session.query(EstadoInforme).all()}
     for codigo, nombre, descripcion in valores:
         if codigo not in existentes:
             session.add(EstadoInforme(codigo=codigo, nombre=nombre, descripcion=descripcion))

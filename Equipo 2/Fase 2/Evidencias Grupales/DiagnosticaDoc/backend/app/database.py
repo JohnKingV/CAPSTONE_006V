@@ -1,22 +1,47 @@
+# app/database.py
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-import os
+from sqlalchemy.engine import URL
+from typing import Generator  # opcional, solo para tipado
 
-# Usa variable de entorno si está disponible
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    # Ajusta usuario/clave/host/puerto/db a tu entorno
-    "postgresql+psycopg2://postgres:pastel123@localhost:5432/db_diagnosticadoc"
+# Carga .env (tolerante a BOM) desde backend/.env
+ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(dotenv_path=ENV_PATH, encoding="utf-8-sig")
+
+# Lee variables (defaults seguros)
+PGUSER = (os.getenv("PGUSER") or "postgres").strip()
+PGPASSWORD = (os.getenv("PGPASSWORD") or "").strip()   # mejor sin default fijo
+PGHOST = (os.getenv("PGHOST") or "localhost").strip()
+PGPORT = int(os.getenv("PGPORT") or "5432")
+PGDATABASE = (os.getenv("PGDATABASE") or "db_diagnosticadoc").strip()
+
+# Usa el driver de psycopg3
+db_url = URL.create(
+    drivername="postgresql+psycopg",
+    username=PGUSER,
+    password=PGPASSWORD,
+    host=PGHOST,
+    port=PGPORT,
+    database=PGDATABASE,
 )
 
-# echo=True para ver SQL en consola (útil en desarrollo)
-engine = create_engine(DATABASE_URL, echo=False, future=True)
+# (Opcional) log seguro
+print("DB URL (safe) =", db_url.set(password="***"))
 
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
+engine = create_engine(
+    db_url,
+    pool_pre_ping=True,
+    future=True,
+)
 
+SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False, future=True)
 Base = declarative_base()
 
-def get_db():
+# ✅ Dependencia para FastAPI (esto es lo que faltaba)
+def get_db() -> Generator:
     db = SessionLocal()
     try:
         yield db
