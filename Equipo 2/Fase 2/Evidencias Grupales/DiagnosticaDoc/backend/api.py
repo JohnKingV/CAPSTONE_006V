@@ -8,7 +8,7 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, UniqueConstraint
 from sqlalchemy.orm import sessionmaker, declarative_base, Session
 
-# ====== CONFIG DB ======
+# ====== CONFIG DB =====
 # Usa tu cadena de conexión *ASCII* (evita caracteres raros). Ejemplo:
 DATABASE_URL = "postgresql+psycopg2://postgres:pastel123@localhost:5432/db_diagnosticadoc"
 
