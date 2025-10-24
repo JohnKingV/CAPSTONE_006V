@@ -1,4 +1,4 @@
-# api.py  —  FastAPI monolítico (funciona tal cual)
+# api.py  —  FastAPI monolítico (funciona tal cual
 from datetime import datetime
 from typing import List, Optional
 
